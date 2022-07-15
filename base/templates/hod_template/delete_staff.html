@@ -1,0 +1,35 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block main_content %}
+
+<div class="container-fluid pt-4 px-4">
+  <div class="bg-secondary text-center rounded p-4">
+
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h6 class="card-title">Are you sure you want to delete ?</h6>
+        </div>
+      <form action="">
+        <div class="form-floating mb-3">
+          {% if messages %}
+              {% for message in messages %}
+                {% if message.tags == 'error' %}
+                  <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                  <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary btn-block">Update</button>
+        </div>
+
+      </form>
+
+  </div>
+</div>
+
+{% endblock main_content %}

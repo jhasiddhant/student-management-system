@@ -1,0 +1,60 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block main_content %}
+
+<div class="container-fluid pt-4 px-4">
+  <div class="row justify-content-center">
+      <div class="bg-secondary text-center rounded p-4 w-50">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h3 class="card-title">Sessions Details</h3>
+          <a class="btn btn-primary" href="{% url 'add_session' %}" role="button">+ Add Session</a>
+        </div>
+
+        <div class="table-responsive ">
+          <table class="table text-start align-middle table-bordered table-hover mb-0">
+            <thead>
+                <tr>
+                <th>ID</th>
+                <th>Session Start Year</th>
+                <th>Session End Year</th>
+                <th style="text-align: center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session_year in session_years %}
+                <tr>
+                <td>{{ session_year.id }}</td>
+                <td>{{ session_year.session_start_year }}</td>
+                <td>{{ session_year.session_end_year }}</td>
+                <td>
+                    <a href="{% url 'edit_session' session_year.id %}" class="btn btn-success">Edit</a>
+                    <a href="{% url 'delete_session' session_year.id %}" class="btn btn-danger">Delete</a>
+                </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+          </table>
+            {% if messages %}
+                <div class="form-floating">
+                    <div class="col-12">
+                        {% for message in messages %}
+                        {% if message.tags == "error" %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                            {{ message }}
+                            </div>
+                        {% elif message.tags == "success" %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                            {{ message }}
+                            </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+      </div>
+  </div>
+</div>
+{% endblock main_content %}
+

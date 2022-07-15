@@ -1,0 +1,68 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block main_content %}
+
+    <!-- Form Start -->
+<div class="container-fluid pt-4 px-4">
+  <div class="row justify-content-center">
+
+      <div class="col-sm-12 col-xl-6">
+          <div class="bg-secondary rounded h-100 p-4 ">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h3 class="card-title">Edit Subject</h3>
+                <a  href="{% url 'manage_subject' %}" class="btn btn-primary text-end">Manage Subject</a>
+            </div>
+
+              <form role="form" action="/edit_subject_save" method="post">
+
+                {% csrf_token %}
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="subject_name" placeholder="Enter Subject" value="{{ subject.subject_name }}">
+                    <input type="hidden" class="form-control" name="subject_id" placeholder="Enter Subject" value="{{ subject.id }}">
+                    <label for="floatingInput">Subject Name</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-control" name="course">
+                        {% for course in courses %}
+                            <option value="{{ course.id }}" {% if course.id == subject.course_id.id %} selected {% endif %}>{{ course.course_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="floatingInput">Course Name</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-control" name="staff">
+                        {% for staff in staffs %}
+                          <option value="{{ staff.id }}" {% if staff.id == subject.staff_id.id %} selected {% endif %}>{{ staff.first_name }} {{ staff.last_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="floatingInput">Staff Name</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    {% if messages %}
+                        {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+                        {% if message.tags == 'success' %}
+                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                </div>
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-block">Save Subject</button>
+                </div>
+
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- Form End -->
+
+{% endblock main_content %}

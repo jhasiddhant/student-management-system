@@ -1,0 +1,21 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block main_content %}
+<!-- Main content -->
+<div class="container-fluid pt-4 px-4">
+    <div class="row justify-content-center">
+
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4 ">
+              <h3 class="card-title">Add Student</h3>
+                    <!-- form start -->
+                    {% url 'add_student_save' as action_path %}
+
+                    {% include 'hod_template/form_template.html' with messages=messages form=form action_path=action_path button_text="Add Student" %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.content -->
+
+{% endblock main_content %}

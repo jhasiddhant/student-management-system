@@ -1,0 +1,110 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block main_content %}
+
+<div class="container-fluid pt-4 px-4">
+  <div class="row justify-content-center">
+
+      <div class="col-sm-12 col-xl-6">
+          <div class="bg-secondary rounded h-100 p-4 ">
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <h3 class="card-title">Add Result</h3>
+          </div>
+          <div class="form-floating mb-3">
+              <div class="form-group">
+                {% if messages %}
+                  {% for message in messages %}
+
+                    {% if message.tags == 'error' %}
+                      <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                    {% endif %}
+
+                    {% if message.tags == 'success' %}
+                      <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                    {% endif %}
+
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          {% if action is None %}
+              <form role="form" action="?action=show-students" method="post">
+
+                {% csrf_token %}
+
+                <div class="form-floating mb-3">
+                        <select class="form-control" name="subject_id" id="subject_id">
+                            {% for i in subjects %}
+                              <option value="{{ i.id }}">{{ i.subject_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="floatingInput">Select Subject</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select class="form-control" name="session_year_id" id="session_year_id">
+                            {% for i in session_years %}
+                              <option value="{{ i.id }}">{{ i.session_start_year }} TO {{ i.session_end_year }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="floatingInput">Select Session Year</label>
+                    </div>
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-block">Fetch Student</button>
+                </div>
+
+              </form>
+          {% else %}
+          <div>
+              <form role="form" action="{% url 'staff_save_results' %}" method="POST">
+
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                    <select class="form-control" name="subject_id" id="subject_id" disabled>
+                        <option value="{{ get_subject.id }}">{{ get_subject}}</option>
+                    </select>
+                    <label for="floatingInput">Select Subject</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-control" name="session_year_id" disabled>
+                        <option value="{{ get_sessionYear.id }}">{{ get_sessionYear }}</option>
+                    </select>
+                    <label for="floatingInput">Session Year</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-control" name="student_id" id="student_id" required>
+                        {% for i in students %}
+                        <option value="{{ i.id }}">{{ i.admin.username }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="floatingInput">Student List</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="assignment_marks" required>
+                    <label for="floatingInput">Assignment Marks</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="exam_marks" required>
+                    <label for="floatingInput">Exam Marks</label>
+                </div>
+
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-block">Save Result</button>
+                </div>
+
+              </form>
+          </div>
+          {% endif %}
+          </div>
+      </div>
+  </div>
+</div>
+<!-- Form End -->
+
+{% endblock main_content %}

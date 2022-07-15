@@ -1,0 +1,53 @@
+{% load static %}
+
+<!-- Sidebar Start -->
+<div class="sidebar pe-4 pb-3">
+    <nav class="navbar bg-secondary navbar-dark">
+
+        <a href="{% url 'student_home' %}" class="navbar-brand mx-4 mb-3">
+            <h3 class="text-primary">IIIT Kota</h3>
+        </a>
+
+        <div class="d-flex align-items-center ms-4 mb-4">
+            <div class="position-relative">
+                <img class="rounded-circle" src="{% static 'img/avatar.svg' %}" alt="" style="width: 40px; height: 40px;">
+            </div>
+
+            <div class="ms-3">
+                <a href="{% url 'student_profile' %}"><h6 class="mb-0">{{user.first_name}}</h6></a>
+                <span>{{user.username}}</span>
+            </div>
+        </div>
+
+
+        <div class="navbar-nav w-100">
+
+            <div class="nav-item">
+                {% url 'student_home' as student_home %}
+                <a href="{% url 'student_home' %}" class="nav-item nav-link {% if request.path == student_home %} active {% endif %}"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+            </div>
+
+            <div class="nav-item">
+                {% url 'student_view_attendance' as student_view_attendance %}
+                <a href="{% url 'student_view_attendance' %}" class="nav-item nav-link {% if request.path == student_view_attendance %} active {% endif %}"><i class="bi bi-calendar me-2"></i>View Attendance</a>
+            </div>
+
+            <div class="nav-item">
+                {% url 'student_view_result' as student_view_result %}
+                <a href="{% url 'student_view_result' %}" class="nav-item nav-link {% if request.path == student_view_result %} active {% endif %}"><i class="bi bi-calendar me-2"></i>View Results</a>
+            </div>
+
+            <div class="nav-item">
+                {% url 'student_apply_leave' as student_apply_leave %}
+                <a href="{% url 'student_apply_leave' %}" class="nav-item nav-link {% if request.path == student_apply_leave %} active {% endif %}"><i class="bi bi-calendar me-2"></i>Apply for Leave</a>
+            </div>
+
+            <div class="nav-item">
+                {% url 'student_feedback' as student_feedback %}
+                <a href="{% url 'student_feedback' %}" class="nav-item nav-link {% if request.path == student_feedback %} active {% endif %}"><i class="bi bi-calendar me-2"></i>Feedback</a>
+            </div>
+
+        </div>
+    </nav>
+</div>
+<!-- Sidebar End -->

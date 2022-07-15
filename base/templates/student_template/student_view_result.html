@@ -1,0 +1,65 @@
+{% extends 'student_template/base_template.html' %}
+
+{% block main_content %}
+
+<div class="container-fluid pt-4 px-4">
+  <div class="row justify-content-center">
+      <div class="bg-secondary text-center rounded p-4  w-50">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h3 class="card-title">View Results</h3>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table text-start align-middle table-bordered table-hover mb-0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Subject</th>
+                <th>Assignment Marks</th>
+                <th>Exam Marks</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for i in student_result %}
+              <tr>
+                <td>{{ i.id }}</td>
+                <td>{{ i.subject_id.subject_name }}</td>
+                <td>{{ i.subject_assignment_marks }}</td>
+                <td>{{ i.subject_exam_marks }}</td>
+                <td>
+                    {% if total >= 40 %}
+                        <span class="alert alert-success">PASS</span>
+                    {% else %}
+                        <span class="alert alert-danger">FAIL</span>
+                    {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+
+        {% if messages %}
+            <div class="form-floating">
+                <div class="col-12">
+                    {% for message in messages %}
+                    {% if message.tags == "error" %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                        {{ message }}
+                        </div>
+                    {% elif message.tags == "success" %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                        {{ message }}
+                        </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        </div>
+      </div>
+  </div>
+</div>
+
+{% endblock main_content %}
+

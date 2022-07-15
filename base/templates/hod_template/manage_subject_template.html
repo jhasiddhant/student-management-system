@@ -1,0 +1,64 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block main_content %}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row justify-content-center">
+        <div class="bg-secondary text-center rounded p-4 w-75">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h3 class="card-title">Subjects Details</h3>
+                <a class="btn btn-primary text-end" href="{% url 'add_subject' %}" role="button">+ Add Subject</a>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table text-start align-middle table-bordered table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Subject Name</th>
+                      <th>Course Name</th>
+                      <th>Course ID</th>
+                      <th>Staff Name</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% for subject in subjects %}
+                        <tr>
+                          <td>{{ subject.id }}</td>
+                          <td>{{ subject.subject_name }}</td>
+                          <td>{{ subject.course_id.course_name }}</td>
+                          <td>{{ subject.course_id.id }}</td>
+                          <td>{{ subject.staff_id.first_name }} {{ subject.staff_id.last_name }}</td>
+                          <td><a href="/edit_subject/{{ subject.id }}" class="btn btn-success">Edit</a>
+                          <a href="/delete_subject/{{ subject.id }}" class="btn btn-lg-square btn-primary"><i class="bi bi-trash"></i></a></td>
+                        </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+
+            {% if messages %}
+                <div class="form-floating">
+                    <div class="col-12">
+                        {% for message in messages %}
+                            {% if message.tags == "error" %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                            {{ message }}
+                            </div>
+                            {% elif message.tags == "success" %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock main_content %}
+

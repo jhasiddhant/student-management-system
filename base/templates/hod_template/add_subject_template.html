@@ -1,0 +1,67 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block main_content %}
+
+    <!-- Form Start -->
+<div class="container-fluid pt-4 px-4">
+  <div class="row justify-content-center">
+
+      <div class="col-sm-12 col-xl-6">
+          <div class="bg-secondary rounded h-100 p-4 ">
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <h3 class="card-title">Add Subject</h3>
+              <a  href="{% url 'manage_subject' %}" class="btn btn-primary text-end">Manage Subject</a>
+          </div>
+              <form role="form" action="/add_subject_save" method="post">
+
+                {% csrf_token %}
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="subject_name" placeholder="Enter Subject">
+                    <label for="floatingInput">Subject Name</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-control" name="course" required>
+                        {% for course in courses %}
+                        <option value="{{ course.id }}">{{ course.course_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="floatingInput">Course Name</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-control" name="staff" required>
+                        {% for staff in staffs %}
+                        <option value="{{ staff.id }}">{{ staff.first_name }} {{ staff.last_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="floatingInput">Staff Name</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    {% if messages %}
+                      {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                          <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+
+                        {% if message.tags == 'success' %}
+                          <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-block">Add Subject</button>
+                </div>
+
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- Form End -->
+
+{% endblock main_content %}
