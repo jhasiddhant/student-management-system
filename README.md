@@ -66,3 +66,11 @@ py manage.py runserver
 #
 
 ## App Preview:
+
+![image](https://user-images.githubusercontent.com/72513126/179344718-7add2a60-565f-462a-954c-9be7d3cc44d8.png)
+
+![image](https://user-images.githubusercontent.com/72513126/179344770-74ac5d47-d502-4d35-a379-e8515218c0da.png)
+
+![image](https://user-images.githubusercontent.com/72513126/179344802-925405ff-9bb2-4d7c-b11a-bcd58bcd7b63.png)
+
+
