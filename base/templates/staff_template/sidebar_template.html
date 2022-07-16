@@ -10,7 +10,11 @@
 
         <div class="d-flex align-items-center ms-4 mb-4">
             <div class="position-relative">
-                <img class="rounded-circle" src="{% static 'img/avatar.svg' %}" alt="" style="width: 40px; height: 40px;">
+                {% if user.profile_pic == "media/avatar.svg" %}
+                <img class="rounded-circle me-lg-2" src="{% static 'img/avatar.svg' %}" alt="" style="width: 40px; height: 40px;">
+                {% else %}
+                <img class="rounded-circle me-lg-2" src="media/{{user.profile_pic}}" alt="" style="width: 40px; height: 40px;">
+                {% endif %}
             </div>
 
             <div class="ms-3">
@@ -28,7 +32,7 @@
             </div>
 
             <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-card-checklist me-2"></i>Attendance</a>
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-clipboard-list me-2"></i>Attendance</a>
                 <div class="dropdown-menu bg-transparent border-0">
                     {% url 'staff_take_attendance' as staff_take_attendance %}
                     <a href="{% url 'staff_take_attendance' %}" class="dropdown-item {% if request.path == staff_take_attendance %} active {% endif %}">Take Attendance</a>
@@ -40,7 +44,7 @@
 
             <div class="nav-item">
                 {% url 'staff_add_results' as staff_add_results %}
-                <a href="{% url 'staff_add_results' %}" class="nav-item nav-link {% if request.path == staff_add_results %} active {% endif %}"><i class="bi bi-envelope me-2"></i>Add Results</a>
+                <a href="{% url 'staff_add_results' %}" class="nav-item nav-link {% if request.path == staff_add_results %} active {% endif %}"><i class="bi bi-view-list me-2"></i>Add Results</a>
             </div>
 
             <div class="nav-item">

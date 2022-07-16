@@ -8,7 +8,43 @@ from base.models import Students, Subjects, CustomUser, Attendance, AttendanceRe
 
 
 def student_home(request):
-    return render(request, "student_template/student_home_template.html")
+    student_obj = Students.objects.get(admin=request.user.id)
+    attendance_total = AttendanceReport.objects.filter(student_id=student_obj).count()
+    attendance_present = AttendanceReport.objects.filter(student_id=student_obj, attendance_id_id=True).count()
+    attendance_absent = AttendanceReport.objects.filter(student_id=student_obj, attendance_id_id=False).count()
+    course = Courses.objects.get(id=student_obj.course_id.id)
+    subjects = Subjects.objects.filter(course_id=course).count()
+
+    return render(request, "student_template/student_home_template.html",
+                  {'attendance_total': attendance_total, 'attendance_present': attendance_present,
+                   'attendance_absent': attendance_absent, 'subjects': subjects})
+
+
+def student_profile(request):
+    user = CustomUser.objects.get(id=request.user.id)
+    return render(request, "student_template/student_profile.html", {"user": user})
+
+
+def student_profile_save(request):
+    if request.method == "POST":
+        profile_pic = request.FILES.get('profile_pic')
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        password = request.POST.get("password")
+        try:
+            customuser = CustomUser.objects.get(id=request.user.id)
+            customuser.first_name = first_name
+            customuser.last_name = last_name
+            if password is not None and password != "":
+                customuser.set_password(password)
+            if profile_pic is not None and profile_pic != "":
+                customuser.profile_pic = profile_pic
+            customuser.save()
+            messages.success(request, "Successfully Updated Profile")
+            return HttpResponseRedirect(reverse("student_profile"))
+        except:
+            messages.error(request, "Failed to Update Profile")
+            return HttpResponseRedirect(reverse("student_profile"))
 
 
 def student_view_attendance(request):
@@ -89,39 +125,3 @@ def student_feedback_save(request):
         except messages as ex:
             ex.error(request, "Failed To Send Feedback")
             return HttpResponseRedirect(reverse("student_feedback"))
-
-
-def student_profile(request):
-    user = CustomUser.objects.get(id=request.user.id)
-    student = Students.objects.get(admin=user)
-    return render(request, "student_template/student_profile.html", {"user": user, "student": student})
-
-
-def student_profile_save(request):
-    if request.method != "POST":
-        return HttpResponseRedirect(reverse("student_profile"))
-    else:
-        profile_pic = request.FILES.get('profile_pic')
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
-        password = request.POST.get("password")
-        address = request.POST.get("address")
-        print(profile_pic)
-        try:
-            customuser = CustomUser.objects.get(id=request.user.id)
-            customuser.first_name = first_name
-            customuser.last_name = last_name
-            if password is not None and password != "":
-                customuser.set_password(password)
-            if profile_pic is not None and profile_pic != "":
-                customuser.profile_pic = profile_pic
-            customuser.save()
-
-            student = Students.objects.get(admin=customuser)
-            student.address = address
-            student.save()
-            messages.success(request, "Successfully Updated Profile")
-            return HttpResponseRedirect(reverse("student_profile"))
-        except:
-            messages.error(request, "Failed to Update Profile")
-            return HttpResponseRedirect(reverse("student_profile"))

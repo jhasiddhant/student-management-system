@@ -1,5 +1,44 @@
 {% extends 'staff_template/base_template.html' %}
 
 {% block main_content %}
-
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-3x fa-user-graduate text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Students Under Me</p>
+                    <h6 class="mb-0 text-center">{{ students_count }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-book-open fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Total Subjects</p>
+                    <h6 class="mb-0 text-center">{{ subject_count }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-clipboard-list fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Total Attendance Taken</p>
+                    <h6 class="mb-0 text-center">{{ attendance_count }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-book-open fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Total Leave Taken</p>
+                    <h6 class="mb-0 text-center">{{ leave_count }}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock main_content %}

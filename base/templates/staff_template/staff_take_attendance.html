@@ -26,7 +26,7 @@
               <form action="?action=get_students" method="POST">
                   {% csrf_token %}
                     <div class="form-floating mb-3">
-                        <select class="form-control" name="subject_id" id="subject_id">
+                        <select class="form-control" name="subject_id" id="subject_id" required>
                             {% for i in subject %}
                               <option value="{{ i.id }}">{{ i.subject_name }}</option>
                             {% endfor %}
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="form-floating mb-3">
-                        <select class="form-control" name="session_year_id" id="session_year_id">
+                        <select class="form-control" name="session_year_id" id="session_year_id" required>
                             {% for i in session_year %}
                               <option value="{{ i.id }}">{{ i.session_start_year }} TO {{ i.session_end_year }}</option>
                             {% endfor %}

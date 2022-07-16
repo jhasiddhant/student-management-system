@@ -10,7 +10,7 @@
           <div class="bg-secondary rounded h-100 p-4 ">
             <h3 class="card-title">Edit Profile</h3>
 
-              <form role="form" action="{% url 'staff_profile_save' %}" method="post">
+              <form role="form" action="{% url 'staff_profile_save' %}" method="post" enctype="multipart/form-data">
 
                 {% csrf_token %}
 
@@ -34,9 +34,8 @@
                   <label for="floatingPassword">Last Name</label>
                 </div>
 
-                <div class="form-floating mb-3">
-                  <input type="text" class="form-control" name="address" value="{{ staff.address }}">
-                  <label for="floatingPassword">Address</label>
+                <div class="mb-3">
+                  <input class="form-control bg-dark" type="file" id="formFile" name="profile_pic">
                 </div>
 
                 <div class="form-floating mb-3">
@@ -46,15 +45,16 @@
 
                 <div class="form-floating mb-3">
                   {% if messages %}
-                    {% for message in messages %}
+                  {% for message in messages %}
                     {% if message.tags == 'error' %}
-                    <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                      <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
                     {% endif %}
+
                     {% if message.tags == 'success' %}
-                    <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                      <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
                     {% endif %}
-                    {% endfor %}
-                  {% endif %}
+                  {% endfor %}
+                {% endif %}
                 </div>
 
                 <div class="card-footer">

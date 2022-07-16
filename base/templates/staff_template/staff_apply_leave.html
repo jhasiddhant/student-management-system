@@ -9,12 +9,12 @@
                     <form action="{% url 'staff_apply_leave_save' %}" method="post">
                         {% csrf_token %}
                         <div class="form-floating mb-3">
-                            <input type="date" class="form-control" name="leave_date" placeholder="Enter Leave Date">
+                            <input type="date" class="form-control" name="leave_date" placeholder="Enter Leave Date" required>
                             <label for="floatingInput">Leave Date</label>
                         </div>
 
                         <div class="form-floating">
-                            <textarea class="form-control" placeholder="Leave a comment here" name="leave_msg" id="floatingTextarea" style="height: 150px;"></textarea>
+                            <textarea class="form-control" placeholder="Leave a comment here" name="leave_msg" id="floatingTextarea" style="height: 150px;" required></textarea>
                             <label for="floatingTextarea">Leave Reason</label>
                         </div>
 

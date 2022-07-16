@@ -7,7 +7,10 @@
 
         <div class="col-sm-12 col-xl-6">
             <div class="bg-secondary rounded h-100 p-4 ">
-              <h3 class="card-title">Add Student</h3>
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                <h3 class="card-title">Add Staff</h3>
+                <a  href="{% url 'manage_student' %}" class="btn btn-primary text-end">Manage Student</a>
+              </div>
                     <!-- form start -->
                     {% url 'add_student_save' as action_path %}
 

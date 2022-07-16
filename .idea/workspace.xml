@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="86b051a5-2f7f-4718-8209-afdfee011ff0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/base/HodViews.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/HodViews.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/StaffViews.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/StaffViews.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/StudentViews.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/StudentViews.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/static/img/testimonial-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/static/img/testimonial-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/static/img/user.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/hod_template/add_staff_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/hod_template/add_staff_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/hod_template/add_student_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/hod_template/add_student_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/hod_template/add_subject_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/hod_template/add_subject_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/hod_template/admin_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/hod_template/admin_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/hod_template/base_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/hod_template/base_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/hod_template/delete_staff.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/hod_template/edit_student_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/hod_template/edit_student_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/hod_template/home_content.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/hod_template/home_content.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/hod_template/sidebar_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/hod_template/sidebar_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/staff_template/base_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/staff_template/base_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/staff_template/sidebar_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/staff_template/sidebar_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/staff_template/staff_apply_leave.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/staff_template/staff_apply_leave.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/staff_template/staff_feedback.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/staff_template/staff_feedback.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/staff_template/staff_home_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/staff_template/staff_home_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/staff_template/staff_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/staff_template/staff_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/staff_template/staff_take_attendance.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/staff_template/staff_take_attendance.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/student_template/base_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/student_template/base_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/student_template/sidebar_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/student_template/sidebar_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/student_template/student_apply_leave.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/student_template/student_apply_leave.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/student_template/student_feedback.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/student_template/student_feedback.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/student_template/student_home_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/student_template/student_home_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/templates/student_template/student_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/base/templates/student_template/student_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/student_management_system/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/student_management_system/urls.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="2BR7HwIE8UTBHLkHkz1sCyJx6yg" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="student_management_system" type="Python.DjangoServer" factoryName="Django server">
+      <module name="student_management_system" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="86b051a5-2f7f-4718-8209-afdfee011ff0" name="Changes" comment="" />
+      <created>1656856960446</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1656856960446</updated>
+      <workItem from="1656857125157" duration="136000" />
+      <workItem from="1656860862915" duration="2371000" />
+      <workItem from="1656863313468" duration="59000" />
+      <workItem from="1656863503620" duration="192000" />
+      <workItem from="1656918813945" duration="8652000" />
+      <workItem from="1656936425261" duration="8600000" />
+      <workItem from="1657012306863" duration="6224000" />
+      <workItem from="1657024923556" duration="9426000" />
+      <workItem from="1657115117118" duration="7195000" />
+      <workItem from="1657184199106" duration="5651000" />
+      <workItem from="1657197614751" duration="3236000" />
+      <workItem from="1657205507663" duration="320000" />
+      <workItem from="1657270761376" duration="2557000" />
+      <workItem from="1657278625938" duration="328000" />
+      <workItem from="1657295331975" duration="1911000" />
+      <workItem from="1657356846404" duration="7969000" />
+      <workItem from="1657369801462" duration="6584000" />
+      <workItem from="1657465710952" duration="187000" />
+      <workItem from="1657466012547" duration="69000" />
+      <workItem from="1657466176627" duration="7119000" />
+      <workItem from="1657530358730" duration="11856000" />
+      <workItem from="1657544148183" duration="11529000" />
+      <workItem from="1657620492880" duration="20113000" />
+      <workItem from="1657703498850" duration="10578000" />
+      <workItem from="1657718945945" duration="8209000" />
+      <workItem from="1657789536279" duration="9254000" />
+      <workItem from="1657805435813" duration="10143000" />
+      <workItem from="1657873762459" duration="7506000" />
+      <workItem from="1657888739017" duration="9546000" />
+      <workItem from="1657954691431" duration="904000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

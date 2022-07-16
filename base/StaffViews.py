@@ -6,11 +6,58 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from base.models import SessionYearModel, Subjects, Students, Attendance, AttendanceReport, Staffs, FeedBackStaffs, \
-    LeaveReportStaff, CustomUser, StudentResult
+    LeaveReportStaff, CustomUser, StudentResult, Courses
 
 
 def staff_home(request):
-    return render(request, "staff_template/staff_home_template.html", )
+    subjects = Subjects.objects.filter(staff_id=request.user.id)
+    course_id_list = []
+    for subject in subjects:
+        course = Courses.objects.get(id=subject.course_id.id)
+        course_id_list.append(course.id)
+
+    final_course = []
+    for course_id in course_id_list:
+        if course_id not in final_course:
+            final_course.append(course_id)
+
+    students_count = Students.objects.filter(course_id__in=final_course).count()
+    attendance_count = Attendance.objects.filter(subject_id__in=subjects).count()
+
+    staff = Staffs.objects.get(admin=request.user.id)
+    leave_count = LeaveReportStaff.objects.filter(staff_id=staff.id, leave_status=1).count()
+    subject_count = subjects.count()
+
+    return render(request, "staff_template/staff_home_template.html",
+                  {'students_count': students_count, 'attendance_count': attendance_count,
+                   'leave_count': leave_count, 'subject_count': subject_count})
+
+
+def staff_profile(request):
+    user = CustomUser.objects.get(id=request.user.id)
+    return render(request, "staff_template/staff_profile.html", {"user": user})
+
+
+def staff_profile_save(request):
+    if request.method == "POST":
+        profile_pic = request.FILES.get('profile_pic')
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        password = request.POST.get("password")
+        try:
+            customuser = CustomUser.objects.get(id=request.user.id)
+            customuser.first_name = first_name
+            customuser.last_name = last_name
+            if password is not None and password != "":
+                customuser.set_password(password)
+            if profile_pic is not None and profile_pic != "":
+                customuser.profile_pic = profile_pic
+            customuser.save()
+            messages.success(request, "Successfully Updated Profile")
+            return HttpResponseRedirect(reverse("staff_profile"))
+        except:
+            messages.error(request, "Failed to Update Profile")
+            return HttpResponseRedirect(reverse("staff_profile"))
 
 
 def staff_take_attendance(request):
@@ -198,37 +245,3 @@ def staff_feedback_save(request):
         except messages as ex:
             ex.error(request, "Failed To Send Feedback")
             return HttpResponseRedirect(reverse("staff_feedback"))
-
-
-def staff_profile(request):
-    user = CustomUser.objects.get(id=request.user.id)
-    staff = Staffs.objects.get(admin=user)
-    return render(request, "staff_template/staff_profile.html", {"user": user, "staff": staff})
-
-
-def staff_profile_save(request):
-    if request.method != "POST":
-        return HttpResponseRedirect(reverse("staff_profile"))
-    else:
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
-        address = request.POST.get("address")
-        password = request.POST.get("password")
-        try:
-            customuser = CustomUser.objects.get(id=request.user.id)
-            customuser.first_name = first_name
-            customuser.last_name = last_name
-            if password is not None and password != "":
-                customuser.set_password(password)
-            customuser.save()
-
-            staff = Staffs.objects.get(admin=customuser.id)
-            staff.address = address
-            staff.save()
-            messages.success(request, "Successfully Updated Profile")
-            return HttpResponseRedirect(reverse("staff_profile"))
-        except:
-            messages.error(request, "Failed to Update Profile")
-            return HttpResponseRedirect(reverse("staff_profile"))
-
-

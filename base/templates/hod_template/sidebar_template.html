@@ -10,7 +10,11 @@
 
         <div class="d-flex align-items-center ms-4 mb-4">
             <div class="position-relative">
-                <img class="rounded-circle" src="{% static 'img/avatar.svg' %}" alt="" style="width: 40px; height: 40px;">
+                {% if user.profile_pic == "media/avatar.svg" %}
+                <img class="rounded-circle me-lg-2" src="{% static 'img/avatar.svg' %}" alt="" style="width: 40px; height: 40px;">
+                {% else %}
+                <img class="rounded-circle me-lg-2" src="media/{{user.profile_pic}}" alt="" style="width: 40px; height: 40px;">
+                {% endif %}
             </div>
 
             <div class="ms-3">
@@ -99,7 +103,7 @@
 
             <div class="nav-item">
                 {% url 'admin_view_attendance' as admin_view_attendance %}
-                <a href="{% url 'admin_view_attendance' %}" class="nav-item nav-link {% if request.path == admin_view_attendance %} active {% endif %}"><i class="bi bi-card-checklist me-2"></i>View Attendance</a>
+                <a href="{% url 'admin_view_attendance' %}" class="nav-item nav-link {% if request.path == admin_view_attendance %} active {% endif %}"><i class="fa fa-clipboard-list me-2"></i>View Attendance</a>
             </div>
 
             <div class="nav-item dropdown">

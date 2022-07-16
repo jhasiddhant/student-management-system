@@ -16,8 +16,8 @@ def admin_home(request):
     course_count = Courses.objects.all().count()
 
     return render(request, "hod_template/home_content.html",
-                  {"student_count": student_count1, "staff_count": staff_count, "subject_count": subject_count,
-                   "course_count": course_count})
+                  {"student_count": student_count1, "staff_count": staff_count,
+                   "subject_count": subject_count, "course_count": course_count})
 
 
 def admin_profile(request):
@@ -26,9 +26,8 @@ def admin_profile(request):
 
 
 def admin_profile_save(request):
-    if request.method != "POST":
-        return HttpResponseRedirect(reverse("admin_profile"))
-    else:
+    if request.method == "POST":
+        profile_pic = request.FILES.get('profile_pic')
         first_name = request.POST.get("first_name")
         last_name = request.POST.get("last_name")
         password = request.POST.get("password")
@@ -38,6 +37,8 @@ def admin_profile_save(request):
             customuser.last_name = last_name
             if password is not None and password != "":
                 customuser.set_password(password)
+            if profile_pic is not None and profile_pic != "":
+                customuser.profile_pic = profile_pic
             customuser.save()
             messages.success(request, "Successfully Updated Profile")
             return HttpResponseRedirect(reverse("admin_profile"))
