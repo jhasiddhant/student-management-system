@@ -89,7 +89,8 @@ def staff_take_attendance(request):
 
 def save_attendance_data(request):
     if request.method == 'POST':
-        subject_id = request.POST.get('subject_id')
+    #  try:
+        subject_id = request.POST.get('subject_id_name')
         session_year_id = request.POST.get('session_year_id')
         attendance_date = request.POST.get('attendance_date')
         student_ids = request.POST.get('student_ids')
@@ -113,6 +114,8 @@ def save_attendance_data(request):
                 attendance_id=attendance
             )
             attendance_report.save()
+    #  except:
+    #     pass
 
     return redirect('staff_take_attendance')
 
