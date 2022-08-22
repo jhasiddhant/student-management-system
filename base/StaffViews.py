@@ -89,7 +89,6 @@ def staff_take_attendance(request):
 
 def save_attendance_data(request):
     if request.method == 'POST':
-    #  try:
         subject_id = request.POST.get('subject_id_name')
         session_year_id = request.POST.get('session_year_id')
         attendance_date = request.POST.get('attendance_date')
@@ -114,8 +113,6 @@ def save_attendance_data(request):
                 attendance_id=attendance
             )
             attendance_report.save()
-    #  except:
-    #     pass
 
     return redirect('staff_take_attendance')
 
@@ -177,16 +174,17 @@ def staff_add_results(request):
 
 def staff_save_results(request):
     if request.method == 'POST':
-        subject_id = request.POST.get('subject_id')
+        subject_ids = request.POST.get('subject_id_name')
         session_year_id = request.POST.get('session_year_id')
-        student_id = request.POST.get('student_id')
+        student_ids = request.POST.get('student_ids')
         assignment_marks = request.POST.get('assignment_marks')
         exam_marks = request.POST.get('exam_marks')
 
-        get_student = Students.objects.get(admin=student_id)
-        get_subject = Subjects.objects.get(id=subject_id)
+        get_subject = Subjects.objects.get(id=subject_ids)
+        get_student = Students.objects.get(id=student_ids)
 
         check_exist = StudentResult.objects.filter(subject_id=get_subject, student_id=get_student).exists()
+    
         if check_exist:
             result = StudentResult.objects.get(subject_id=get_subject, student_id=get_student)
             result.subject_assignment_marks = assignment_marks
@@ -196,7 +194,7 @@ def staff_save_results(request):
             return HttpResponseRedirect(reverse("staff_add_results"))
         else:
             result = StudentResult(student_id=get_student, subject_id=get_subject, subject_exam_marks=exam_marks,
-                                   subject_assignment_marks=assignment_marks)
+                                subject_assignment_marks=assignment_marks)
             result.save()
             messages.success(request, "Successfully Added Result")
             return HttpResponseRedirect(reverse("staff_add_results"))
