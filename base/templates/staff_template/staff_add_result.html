@@ -61,21 +61,21 @@
 
                 {% csrf_token %}
                 <div class="form-floating mb-3">
-                    <select class="form-control" name="subject_id" id="subject_id" disabled>
+                    <select class="form-control" name="subject_id_name" id="subject_id" >
                         <option value="{{ get_subject.id }}">{{ get_subject}}</option>
                     </select>
                     <label for="floatingInput">Select Subject</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <select class="form-control" name="session_year_id" disabled>
+                    <select class="form-control" name="session_year_id" >
                         <option value="{{ get_sessionYear.id }}">{{ get_sessionYear }}</option>
                     </select>
                     <label for="floatingInput">Session Year</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <select class="form-control" name="student_id" id="student_id" required>
+                    <select class="form-control" name="student_ids" id="student_id" required>
                         {% for i in students %}
                         <option value="{{ i.id }}">{{ i.admin.username }}</option>
                         {% endfor %}
