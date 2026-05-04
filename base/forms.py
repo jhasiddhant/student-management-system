@@ -1,9 +1,16 @@
 from django import forms
+from django.core.validators import FileExtensionValidator
 from base.models import Courses, SessionYearModel
 
 
 class DateInput(forms.DateInput):
     input_type = "date"
+
+
+def validate_image_size(file):
+    max_size = 2 * 1024 * 1024  # 2MB
+    if file.size > max_size:
+        raise forms.ValidationError("Image file size must be under 2MB.")
 
 
 class AddStudentForm(forms.Form):
@@ -18,34 +25,33 @@ class AddStudentForm(forms.Form):
     username = forms.CharField(label="Username", max_length=50,
                                widget=forms.TextInput(attrs={"class": "form-control", "autocomplete": "off"}))
     address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(attrs={"class": "form-control"}))
-    try:
-        courses = Courses.objects.all()
-        course_list = []
-        for course in courses:
-            single_course = (course.id, course.course_name)
-            course_list.append(single_course)
-    except:
-        course_list = []
-
-    try:
-        session_years = SessionYearModel.objects.all()
-        session_year_list = []
-        for session_year in session_years:
-            single_session_year = (session_year.id, str(session_year.session_start_year) + " to " + str(session_year.session_end_year))
-            session_year_list.append(single_session_year)
-    except:
-        session_year_list = []
 
     gender_choice = (
         ("Male", "Male"),
         ("Female", "Female")
     )
 
-    course = forms.ChoiceField(label="Course", choices=course_list,
+    course = forms.ChoiceField(label="Course", choices=[],
                                widget=forms.Select(attrs={"class": "form-control"}))
     sex = forms.ChoiceField(label="Sex", choices=gender_choice, widget=forms.Select(attrs={"class": "form-control"}))
-    session_year_id = forms.ChoiceField(label="Session Year", choices=session_year_list,
+    session_year_id = forms.ChoiceField(label="Session Year", choices=[],
                                         widget=forms.Select(attrs={"class": "form-control"}))
+    profile_pic = forms.ImageField(label="Profile Pic", required=False,
+                                   validators=[
+                                       FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif']),
+                                       validate_image_size,
+                                   ],
+                                   widget=forms.FileInput(attrs={"class": "form-control"}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['course'].choices = [
+            (c.id, c.course_name) for c in Courses.objects.all()
+        ]
+        self.fields['session_year_id'].choices = [
+            (s.id, f"{s.session_start_year} to {s.session_end_year}")
+            for s in SessionYearModel.objects.all()
+        ]
 
 
 class EditStudentForm(forms.Form):
@@ -57,32 +63,23 @@ class EditStudentForm(forms.Form):
     username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(attrs={"class": "form-control"}))
     address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(attrs={"class": "form-control"}))
 
-    try:
-        courses = Courses.objects.all()
-        course_list = []
-        for course in courses:
-            single_course = (course.id, course.course_name)
-            course_list.append(single_course)
-    except:
-        course_list = []
-
-        # For Displaying Session Years
-    try:
-        session_years = SessionYearModel.objects.all()
-        session_year_list = []
-        for session_year in session_years:
-            single_session_year = (session_year.id, str(session_year.session_start_year) + " to " + str(session_year.session_end_year))
-            session_year_list.append(single_session_year)
-    except:
-        session_year_list = []
-
     gender_choice = (
         ("Male", "Male"),
         ("Female", "Female")
     )
 
-    course = forms.ChoiceField(label="Course", choices=course_list,
+    course = forms.ChoiceField(label="Course", choices=[],
                                widget=forms.Select(attrs={"class": "form-control"}))
     sex = forms.ChoiceField(label="Sex", choices=gender_choice, widget=forms.Select(attrs={"class": "form-control"}))
-    session_year_id = forms.ChoiceField(label="Session Year", choices=session_year_list,
+    session_year_id = forms.ChoiceField(label="Session Year", choices=[],
                                         widget=forms.Select(attrs={"class": "form-control"}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['course'].choices = [
+            (c.id, c.course_name) for c in Courses.objects.all()
+        ]
+        self.fields['session_year_id'].choices = [
+            (s.id, f"{s.session_start_year} to {s.session_end_year}")
+            for s in SessionYearModel.objects.all()
+        ]

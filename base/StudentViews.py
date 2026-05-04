@@ -1,30 +1,41 @@
+import logging
+
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+from base.decorators import student_required
 from base.models import Students, Subjects, CustomUser, Attendance, AttendanceReport, LeaveReportStudent, \
     FeedBackStudent, Courses, SessionYearModel, StudentResult
 
+logger = logging.getLogger(__name__)
 
+
+@student_required
 def student_home(request):
-    student_obj = Students.objects.get(admin=request.user.id)
-    attendance_total = AttendanceReport.objects.filter(student_id=student_obj).count()
-    attendance_present = AttendanceReport.objects.filter(student_id=student_obj, attendance_id_id=True).count()
-    attendance_absent = AttendanceReport.objects.filter(student_id=student_obj, attendance_id_id=False).count()
-    course = Courses.objects.get(id=student_obj.course_id.id)
-    subjects = Subjects.objects.filter(course_id=course).count()
+    student_obj = Students.objects.select_related('course_id', 'session_year_id').get(admin=request.user.id)
+    attendance_present = AttendanceReport.objects.filter(student_id=student_obj).count()
+    course_subjects = Subjects.objects.filter(course_id=student_obj.course_id)
+    attendance_total = Attendance.objects.filter(
+        subject_id__in=course_subjects,
+        session_year_id=student_obj.session_year_id
+    ).count()
+    attendance_absent = attendance_total - attendance_present
+    subjects = course_subjects.count()
 
     return render(request, "student_template/student_home_template.html",
                   {'attendance_total': attendance_total, 'attendance_present': attendance_present,
                    'attendance_absent': attendance_absent, 'subjects': subjects})
 
 
+@student_required
 def student_profile(request):
     user = CustomUser.objects.get(id=request.user.id)
     return render(request, "student_template/student_profile.html", {"user": user})
 
 
+@student_required
 def student_profile_save(request):
     if request.method == "POST":
         profile_pic = request.FILES.get('profile_pic')
@@ -42,11 +53,13 @@ def student_profile_save(request):
             customuser.save()
             messages.success(request, "Successfully Updated Profile")
             return HttpResponseRedirect(reverse("student_profile"))
-        except:
+        except Exception:
+            logger.exception("Failed to update student profile")
             messages.error(request, "Failed to Update Profile")
             return HttpResponseRedirect(reverse("student_profile"))
 
 
+@student_required
 def student_view_attendance(request):
     student = Students.objects.get(admin=request.user.id)
     subjects = Subjects.objects.filter(course_id=student.course_id)
@@ -60,31 +73,30 @@ def student_view_attendance(request):
             get_subject = Subjects.objects.get(id=subject_id)
 
             attendance_report = AttendanceReport.objects.filter(student_id=student,
-                                                                attendance_id__subject_id=subject_id)
+                                                                attendance_id__subject_id=subject_id).select_related('attendance_id')
     return render(request, "student_template/student_view_attendance.html",
                   {'subjects': subjects, 'action': action, 'get_subject': get_subject,
                    'attendance_report': attendance_report})
 
 
+@student_required
 def student_view_result(request):
     student = Students.objects.get(admin=request.user.id)
-    student_result = StudentResult.objects.filter(student_id=student.id)
-    total = None
-    for i in student_result:
-        assignment_marks = i.subject_assignment_marks
-        exam_marks = i.subject_exam_marks
-        total = assignment_marks + exam_marks
+    student_result = StudentResult.objects.filter(student_id=student.id).select_related('subject_id')
+    total = sum(r.subject_assignment_marks + r.subject_exam_marks for r in student_result)
 
     return render(request, "student_template/student_view_result.html",
                   {"student_result": student_result, 'total': total})
 
 
+@student_required
 def student_apply_leave(request):
-    staff_obj = Students.objects.get(admin=request.user.id)
-    leave_data = LeaveReportStudent.objects.filter(student_id=staff_obj)
+    student_obj = Students.objects.get(admin=request.user.id)
+    leave_data = LeaveReportStudent.objects.filter(student_id=student_obj)
     return render(request, "student_template/student_apply_leave.html", {"leave_data": leave_data})
 
 
+@student_required
 def student_apply_leave_save(request):
     if request.method != "POST":
         return HttpResponseRedirect(reverse("student_apply_leave"))
@@ -99,17 +111,20 @@ def student_apply_leave_save(request):
             leave_report.save()
             messages.success(request, "Successfully Applied for Leave")
             return HttpResponseRedirect(reverse("student_apply_leave"))
-        except messages as ex:
-            ex.error(request, "Failed To Apply for Leave")
+        except Exception:
+            logger.exception("Failed to apply for student leave")
+            messages.error(request, "Failed To Apply for Leave")
             return HttpResponseRedirect(reverse("student_apply_leave"))
 
 
+@student_required
 def student_feedback(request):
-    staff_id = Students.objects.get(admin=request.user.id)
-    feedback_data = FeedBackStudent.objects.filter(student_id=staff_id)
+    student_obj = Students.objects.get(admin=request.user.id)
+    feedback_data = FeedBackStudent.objects.filter(student_id=student_obj)
     return render(request, "student_template/student_feedback.html", {"feedback_data": feedback_data})
 
 
+@student_required
 def student_feedback_save(request):
     if request.method != "POST":
         return HttpResponseRedirect(reverse("student_feedback"))
@@ -122,6 +137,7 @@ def student_feedback_save(request):
             feedback.save()
             messages.success(request, "Successfully Sent Feedback")
             return HttpResponseRedirect(reverse("student_feedback"))
-        except messages as ex:
-            ex.error(request, "Failed To Send Feedback")
+        except Exception:
+            logger.exception("Failed to send student feedback")
+            messages.error(request, "Failed To Send Feedback")
             return HttpResponseRedirect(reverse("student_feedback"))

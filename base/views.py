@@ -3,8 +3,6 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-
-# Create your views here.
 from django.urls import reverse
 
 from base.EmailBackEnd import EmailBackEnd
@@ -16,15 +14,15 @@ def ShowLoginPage(request):
 
 def doLogin(request):
     if request.method != "POST":
-        return HttpResponse("<h2>Method Not Allowed</h2>")
+        return HttpResponse("<h2>Method Not Allowed</h2>", status=405)
     else:
         user = EmailBackEnd.authenticate(request, username=request.POST.get("email"),
                                          password=request.POST.get("password"))
         if user is not None:
             login(request, user)
-            if user.user_type == "1":
+            if str(user.user_type) == "1":
                 return HttpResponseRedirect('/admin_home')
-            elif user.user_type == "2":
+            elif str(user.user_type) == "2":
                 return HttpResponseRedirect(reverse("staff_home"))
             else:
                 return HttpResponseRedirect(reverse("student_home"))
@@ -33,11 +31,9 @@ def doLogin(request):
             return HttpResponseRedirect("/")
 
 
+@login_required(login_url='/')
 def GetUserDetails(request):
-    if request.user is not None:
-        return HttpResponse("User : " + request.user.email + " usertype : " + str(request.user.user_type))
-    else:
-        return HttpResponse("Please Login First")
+    return HttpResponse("User : " + request.user.email + " usertype : " + str(request.user.user_type))
 
 
 def logout_user(request):

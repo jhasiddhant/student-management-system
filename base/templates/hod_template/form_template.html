@@ -17,6 +17,9 @@
 {% endif %}
 <form role="form" action="{{ action_path }}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
+        {% if id %}
+        <input type="hidden" name="student_id" value="{{ id }}">
+        {% endif %}
         <div class="bg-secondary rounded h-100 p-4">
 
             {% for field in form %}

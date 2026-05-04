@@ -1,27 +1,24 @@
 import json
+import logging
 
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
+from base.decorators import staff_required
 from base.models import SessionYearModel, Subjects, Students, Attendance, AttendanceReport, Staffs, FeedBackStaffs, \
     LeaveReportStaff, CustomUser, StudentResult, Courses
 
+logger = logging.getLogger(__name__)
 
+
+@staff_required
 def staff_home(request):
-    subjects = Subjects.objects.filter(staff_id=request.user.id)
-    course_id_list = []
-    for subject in subjects:
-        course = Courses.objects.get(id=subject.course_id.id)
-        course_id_list.append(course.id)
+    subjects = Subjects.objects.filter(staff_id=request.user.id).select_related('course_id')
+    course_ids = set(subject.course_id_id for subject in subjects)
 
-    final_course = []
-    for course_id in course_id_list:
-        if course_id not in final_course:
-            final_course.append(course_id)
-
-    students_count = Students.objects.filter(course_id__in=final_course).count()
+    students_count = Students.objects.filter(course_id__in=course_ids).count()
     attendance_count = Attendance.objects.filter(subject_id__in=subjects).count()
 
     staff = Staffs.objects.get(admin=request.user.id)
@@ -33,11 +30,13 @@ def staff_home(request):
                    'leave_count': leave_count, 'subject_count': subject_count})
 
 
+@staff_required
 def staff_profile(request):
     user = CustomUser.objects.get(id=request.user.id)
     return render(request, "staff_template/staff_profile.html", {"user": user})
 
 
+@staff_required
 def staff_profile_save(request):
     if request.method == "POST":
         profile_pic = request.FILES.get('profile_pic')
@@ -55,11 +54,13 @@ def staff_profile_save(request):
             customuser.save()
             messages.success(request, "Successfully Updated Profile")
             return HttpResponseRedirect(reverse("staff_profile"))
-        except:
+        except Exception:
+            logger.exception("Failed to update staff profile")
             messages.error(request, "Failed to Update Profile")
             return HttpResponseRedirect(reverse("staff_profile"))
 
 
+@staff_required
 def staff_take_attendance(request):
     subject = Subjects.objects.filter(staff_id=request.user.id)
     session_year = SessionYearModel.objects.all()
@@ -80,19 +81,26 @@ def staff_take_attendance(request):
 
             for i in subject:
                 student_id = i.course_id.id
-                students = Students.objects.filter(course_id=student_id)
+                students = Students.objects.filter(course_id=student_id).select_related('admin')
 
     return render(request, "staff_template/staff_take_attendance.html",
                   {'subject': subject, 'session_year': session_year, 'get_subject': get_subject,
                    'get_sessionYear': get_sessionYear, 'action': action, 'students': students})
 
 
+@staff_required
 def save_attendance_data(request):
     if request.method == 'POST':
         subject_id = request.POST.get('subject_id_name')
         session_year_id = request.POST.get('session_year_id')
         attendance_date = request.POST.get('attendance_date')
         student_ids = request.POST.get('student_ids')
+
+        try:
+            student_ids = json.loads(student_ids)
+        except (json.JSONDecodeError, TypeError):
+            messages.error(request, "Invalid student data")
+            return redirect('staff_take_attendance')
 
         get_subject = Subjects.objects.get(id=subject_id)
         get_sessionYear = SessionYearModel.objects.get(id=session_year_id)
@@ -104,10 +112,8 @@ def save_attendance_data(request):
         )
         attendance.save()
 
-        for stud in student_ids:
-            stud_id = stud
-            int_stud = int(stud_id)
-            p_students = Students.objects.get(id=int_stud)
+        for stud_id in student_ids:
+            p_students = Students.objects.get(id=int(stud_id))
             attendance_report = AttendanceReport(
                 student_id=p_students,
                 attendance_id=attendance
@@ -117,6 +123,7 @@ def save_attendance_data(request):
     return redirect('staff_take_attendance')
 
 
+@staff_required
 def view_attendance_data(request):
     subject = Subjects.objects.filter(staff_id=request.user.id)
     session_year = SessionYearModel.objects.all()
@@ -138,7 +145,7 @@ def view_attendance_data(request):
             for i in attendance:
                 attendance_id = i.id
                 attendance_report = AttendanceReport.objects.filter(
-                    attendance_id=attendance_id)
+                    attendance_id=attendance_id).select_related('student_id__admin')
 
     return render(request, 'staff_template/staff_view_attendance.html',
                   {'subject': subject, 'session_year': session_year, 'action': action, 'get_subject': get_subject,
@@ -146,6 +153,7 @@ def view_attendance_data(request):
                    'attendance_report': attendance_report})
 
 
+@staff_required
 def staff_add_results(request):
     subjects = Subjects.objects.filter(staff_id=request.user.id)
     session_years = SessionYearModel.objects.all()
@@ -165,13 +173,14 @@ def staff_add_results(request):
             subjects = Subjects.objects.filter(id=subject_id)
             for i in subjects:
                 student_id = i.course_id.id
-                students = Students.objects.filter(course_id=student_id)
+                students = Students.objects.filter(course_id=student_id).select_related('admin')
 
     return render(request, "staff_template/staff_add_result.html",
                   {"subjects": subjects, "session_years": session_years, 'action': action,
                    'get_subject': get_subject, 'get_sessionYear': get_sessionYear, 'students': students})
 
 
+@staff_required
 def staff_save_results(request):
     if request.method == 'POST':
         subject_ids = request.POST.get('subject_id_name')
@@ -200,12 +209,14 @@ def staff_save_results(request):
             return HttpResponseRedirect(reverse("staff_add_results"))
 
 
+@staff_required
 def staff_apply_leave(request):
     staff_obj = Staffs.objects.get(admin=request.user.id)
     leave_data = LeaveReportStaff.objects.filter(staff_id=staff_obj)
     return render(request, "staff_template/staff_apply_leave.html", {"leave_data": leave_data})
 
 
+@staff_required
 def staff_apply_leave_save(request):
     if request.method != "POST":
         return HttpResponseRedirect(reverse("staff_apply_leave"))
@@ -220,17 +231,20 @@ def staff_apply_leave_save(request):
             leave_report.save()
             messages.success(request, "Successfully Applied for Leave")
             return HttpResponseRedirect(reverse("staff_apply_leave"))
-        except messages as ex:
-            ex.error(request, "Failed To Apply for Leave")
+        except Exception:
+            logger.exception("Failed to apply for leave")
+            messages.error(request, "Failed To Apply for Leave")
             return HttpResponseRedirect(reverse("staff_apply_leave"))
 
 
+@staff_required
 def staff_feedback(request):
     staff_id = Staffs.objects.get(admin=request.user.id)
     feedback_data = FeedBackStaffs.objects.filter(staff_id=staff_id)
     return render(request, "staff_template/staff_feedback.html", {"feedback_data": feedback_data})
 
 
+@staff_required
 def staff_feedback_save(request):
     if request.method != "POST":
         return HttpResponseRedirect(reverse("staff_feedback_save"))
@@ -243,6 +257,7 @@ def staff_feedback_save(request):
             feedback.save()
             messages.success(request, "Successfully Sent Feedback")
             return HttpResponseRedirect(reverse("staff_feedback"))
-        except messages as ex:
-            ex.error(request, "Failed To Send Feedback")
+        except Exception:
+            logger.exception("Failed to send staff feedback")
+            messages.error(request, "Failed To Send Feedback")
             return HttpResponseRedirect(reverse("staff_feedback"))

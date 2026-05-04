@@ -60,10 +60,40 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="#reply_btn" >Send</button>
+        <button type="button" class="btn btn-primary" id="reply_btn" >Send</button>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+$(document).ready(function(){
+    $(".reply_open_modal").click(function(){
+        var id = $(this).closest("tr").find("td:first").text();
+        $("#reply_id").val(id);
+    });
+    $("#reply_btn").click(function(){
+        var id = $("#reply_id").val();
+        var message = $("#reply_message").val();
+        var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : '{{ csrf_token }}';
+        $.ajax({
+            url: "{% url 'student_feedback_message_replied' %}",
+            type: "POST",
+            data: {id: id, message: message, csrfmiddlewaretoken: csrftoken},
+            success: function(response){
+                if(response.status){
+                    alert("Reply sent successfully");
+                    location.reload();
+                } else {
+                    alert("Failed to send reply");
+                }
+            },
+            error: function(){
+                alert("Error sending reply");
+            }
+        });
+    });
+});
+</script>
 
 {% endblock main_content %}

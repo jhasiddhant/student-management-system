@@ -1,16 +1,21 @@
+import logging
+
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.deprecation import MiddlewareMixin
+
+logger = logging.getLogger(__name__)
 
 
 class LoginCheckMiddleWare(MiddlewareMixin):
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         modulename = view_func.__module__
-        print(modulename)
+        logger.debug("Module accessed: %s by user: %s", modulename, getattr(request.user, 'username', 'anonymous'))
         user = request.user
         if user.is_authenticated:
-            if user.user_type == "1":
+            user_type = str(user.user_type)
+            if user_type == "1":
                 if modulename == "base.HodViews":
                     pass
                 elif modulename == "base.views" or modulename == "django.views.static":
@@ -19,14 +24,14 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass
                 else:
                     return HttpResponseRedirect(reverse("admin_home"))
-            elif user.user_type == "2":
+            elif user_type == "2":
                 if modulename == "base.StaffViews" or modulename == "base.EditResultVIewClass":
                     pass
                 elif modulename == "base.views" or modulename == "django.views.static":
                     pass
                 else:
                     return HttpResponseRedirect(reverse("staff_home"))
-            elif user.user_type == "3":
+            elif user_type == "3":
                 if modulename == "base.StudentViews" or modulename == "django.views.static":
                     pass
                 elif modulename == "base.views":
