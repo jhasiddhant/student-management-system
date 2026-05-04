@@ -1,7 +1,9 @@
+import json
 import logging
 
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -22,9 +24,38 @@ def admin_home(request):
     subject_count = Subjects.objects.all().count()
     course_count = Courses.objects.all().count()
 
-    return render(request, "hod_template/home_content.html",
-                  {"student_count": student_count1, "staff_count": staff_count,
-                   "subject_count": subject_count, "course_count": course_count})
+    # Course-wise student counts for pie chart
+    courses = Courses.objects.all()
+    course_names = [c.course_name for c in courses]
+    course_student_counts = [Students.objects.filter(course_id=c).count() for c in courses]
+
+    # Pending leave counts
+    pending_student_leaves = LeaveReportStudent.objects.filter(leave_status=0).count()
+    pending_staff_leaves = LeaveReportStaff.objects.filter(leave_status=0).count()
+
+    # Recent leave applications (last 10)
+    recent_student_leaves = LeaveReportStudent.objects.select_related('student_id__admin').order_by('-id')[:5]
+    recent_staff_leaves = LeaveReportStaff.objects.select_related('staff_id__admin').order_by('-id')[:5]
+
+    # Subject-wise attendance counts for bar chart
+    subjects = Subjects.objects.all()
+    subject_names = [s.subject_name for s in subjects]
+    subject_attendance_counts = [AttendanceReport.objects.filter(attendance_id__subject_id=s).count() for s in subjects]
+
+    return render(request, "hod_template/home_content.html", {
+        "student_count": student_count1,
+        "staff_count": staff_count,
+        "subject_count": subject_count,
+        "course_count": course_count,
+        "course_names": json.dumps(course_names),
+        "course_student_counts": json.dumps(course_student_counts),
+        "pending_student_leaves": pending_student_leaves,
+        "pending_staff_leaves": pending_staff_leaves,
+        "recent_student_leaves": recent_student_leaves,
+        "recent_staff_leaves": recent_staff_leaves,
+        "subject_names": json.dumps(subject_names),
+        "subject_attendance_counts": json.dumps(subject_attendance_counts),
+    })
 
 
 @hod_required
@@ -88,10 +119,19 @@ def add_staff_save(request):
 @hod_required
 def manage_staff(request):
     staffs = Staffs.objects.select_related('admin').all()
+    query = request.GET.get('q', '').strip()
+    if query:
+        staffs = staffs.filter(
+            Q(admin__first_name__icontains=query)
+            | Q(admin__last_name__icontains=query)
+            | Q(admin__username__icontains=query)
+            | Q(admin__email__icontains=query)
+            | Q(address__icontains=query)
+        )
     paginator = Paginator(staffs, 25)
     page = request.GET.get('page')
     staffs = paginator.get_page(page)
-    return render(request, "hod_template/manage_staff_template.html", {"staffs": staffs})
+    return render(request, "hod_template/manage_staff_template.html", {"staffs": staffs, "q": query})
 
 
 @hod_required
@@ -423,10 +463,20 @@ def add_student_save(request):
 @hod_required
 def manage_student(request):
     students = Students.objects.select_related('admin', 'course_id', 'session_year_id').all()
+    query = request.GET.get('q', '').strip()
+    if query:
+        students = students.filter(
+            Q(admin__first_name__icontains=query)
+            | Q(admin__last_name__icontains=query)
+            | Q(admin__username__icontains=query)
+            | Q(admin__email__icontains=query)
+            | Q(address__icontains=query)
+            | Q(course_id__course_name__icontains=query)
+        )
     paginator = Paginator(students, 25)
     page = request.GET.get('page')
     students = paginator.get_page(page)
-    return render(request, "hod_template/manage_student_template.html", {"students": students})
+    return render(request, "hod_template/manage_student_template.html", {"students": students, "q": query})
 
 
 @hod_required

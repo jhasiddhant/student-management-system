@@ -1,76 +1,98 @@
 # Student Management System
 
-#
+A web-based student management system built with Django and MySQL. Supports three user roles — **Admin (HOD)**, **Staff**, and **Student** — each with dedicated dashboards and functionality.
 
-## Tech Stacks Used:
-HTML, CSS, JavaScript, Django, MySQL
-#
+## Tech Stack
 
-## Cloning the repository
+- **Backend:** Django 4.2 LTS, Python 3.10+
+- **Database:** MySQL 8.0+
+- **Frontend:** HTML, CSS, JavaScript, Bootstrap, Chart.js
+- **Libraries:** PyMySQL, Pillow, python-decouple
 
---> Clone the repository using the command below :
+## Getting Started
+
+### 1. Clone the repository
+
 ```bash
 git clone https://github.com/jhasiddhant/student-management-system.git
-```
-
---> Move into the directory of the project files : 
-```bash
 cd student-management-system
 ```
 
---> Install the requirements :
+### 2. Create and activate a virtual environment
+
+```bash
+python -m venv venv
+source venv/bin/activate        # macOS / Linux
+venv\Scripts\activate           # Windows
+```
+
+### 3. Install dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-#
+### 4. Create the MySQL database
 
-## Creating MySQL Database:
-step 1:
-```python
-create database sms;
-```
-step 2:
-```python
-create user 'sms'@'localhost' identified with mysql_native_password by 'password';
-```
-step 3:
-```python
-grant all privileges on *.* to 'sms'@'localhost';
-```
-#
+Log in to the MySQL shell and run:
 
-## Connecting Database:
-Delete all old migrations file in base/migrations and then run following commands:
-```python
-py manage.py makemigrations
+```sql
+CREATE DATABASE sms;
+CREATE USER 'sms'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON sms.* TO 'sms'@'localhost';
+FLUSH PRIVILEGES;
 ```
-```python
-py manage.py migrate
-```
-#
 
-## Running the App:
---> Before running we create superuser :
+### 5. Configure environment variables
+
+Create a `.env` file in the project root:
+
+```env
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+DB_ENGINE=django.db.backends.mysql
+DB_NAME=sms
+DB_USER=sms
+DB_PASSWORD=password
+DB_HOST=localhost
+DB_PORT=3306
+```
+
+> **Note:** Generate a proper `SECRET_KEY` for production. You can use `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`.
+
+### 6. Run migrations
+
 ```bash
-py manage.py createsuperuser
+python manage.py migrate
 ```
 
---> To run the App, we use :
+### 7. Create a superuser
+
 ```bash
-py manage.py runserver
+python manage.py createsuperuser
 ```
 
-> ⚠ Then, the development server will be started at http://127.0.0.1:8000/
+### 8. Run the development server
 
-#
+```bash
+python manage.py runserver
+```
 
-## App Preview:
+The app will be available at **http://127.0.0.1:8000/**
 
-![image](https://user-images.githubusercontent.com/72513126/179344718-7add2a60-565f-462a-954c-9be7d3cc44d8.png)
+## Features
 
-![image](https://user-images.githubusercontent.com/72513126/179344770-74ac5d47-d502-4d35-a379-e8515218c0da.png)
+- **Admin Dashboard:** Overview charts (course-wise students, subject-wise attendance), pending leave requests, manage staff/students/courses/subjects/sessions
+- **Staff Portal:** Mark attendance, add results, apply for leave, send feedback
+- **Student Portal:** View attendance and results, apply for leave, send feedback
+- **Authentication:** Role-based access control with login middleware
+- **Password Reset:** Email-based password recovery
 
-![image](https://user-images.githubusercontent.com/72513126/179344802-925405ff-9bb2-4d7c-b11a-bcd58bcd7b63.png)
+## App Preview
+
+![Login Page](screenshots/login.png)
+
+![Admin Dashboard](screenshots/dashboard.png)
 
 

@@ -2,6 +2,7 @@
 
 {% block main_content %}
 
+<!-- Stats Cards -->
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <div class="col-sm-6 col-xl-3">
@@ -43,27 +44,47 @@
     </div>
 </div>
 
+<!-- Pending Leaves Cards -->
 <div class="container-fluid pt-4 px-4">
-    <div class="row g-4 justify-content-center">
-
-        <div class="col-sm-12 col-md-6 col-xl-4">
-            <div class="h-100 bg-secondary rounded p-4">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h6 class="mb-0">Calender</h6>
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-6">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-3x fa-envelope-open-text text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Pending Student Leaves</p>
+                    <h6 class="mb-0 text-center">{{ pending_student_leaves }}</h6>
                 </div>
-                <div id="calender"></div>
             </div>
         </div>
+        <div class="col-sm-6 col-xl-6">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-3x fa-envelope-open-text text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Pending Staff Leaves</p>
+                    <h6 class="mb-0 text-center">{{ pending_staff_leaves }}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <div class="col-sm-12 col-md-6 col-xl-4 w-50">
+<!-- Charts Row -->
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <!-- Course Wise Students Pie Chart -->
+        <div class="col-sm-12 col-xl-6">
             <div class="bg-secondary rounded p-4">
                 <h6 class="mb-4">Course Wise Students</h6>
+                <canvas id="courseStudentChart" style="max-height: 300px;"></canvas>
             </div>
-              <div class="card-body">
-                <canvas id="pieChart3" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-              </div>
         </div>
-
+        <!-- Subject Wise Attendance Bar Chart -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded p-4">
+                <h6 class="mb-4">Subject Wise Attendance</h6>
+                <canvas id="subjectAttendanceChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -71,10 +92,64 @@
 
 {% block custom_js %}
 <script>
-    $(document).ready(function(){
+    // Course Wise Students - Pie Chart
+    var courseCtx = document.getElementById('courseStudentChart').getContext('2d');
+    new Chart(courseCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ course_names|safe }},
+            datasets: [{
+                data: {{ course_student_counts|safe }},
+                backgroundColor: ['#EB1616', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                borderColor: '#191C24',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#6C7293', padding: 15 }
+                }
+            }
+        }
+    });
 
-
+    // Subject Wise Attendance - Bar Chart
+    var subjCtx = document.getElementById('subjectAttendanceChart').getContext('2d');
+    new Chart(subjCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ subject_names|safe }},
+            datasets: [{
+                label: 'Attendance Count',
+                data: {{ subject_attendance_counts|safe }},
+                backgroundColor: '#EB1616',
+                borderColor: '#EB1616',
+                borderWidth: 1,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: { color: '#6C7293' }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: '#6C7293', maxRotation: 45, minRotation: 45 },
+                    grid: { color: 'rgba(108, 114, 147, 0.2)' }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: '#6C7293' },
+                    grid: { color: 'rgba(108, 114, 147, 0.2)' }
+                }
+            }
+        }
     });
 </script>
-
 {% endblock custom_js %}

@@ -122,8 +122,10 @@ AUTHENTICATION_BACKENDS = ['base.EmailBackEnd.EmailBackEnd']
 
 LOGIN_URL = '/'
 
+import tempfile
+
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_mails")
+EMAIL_FILE_PATH = os.path.join(tempfile.gettempdir(), "sms_sent_mails")
 
 # Security settings for production
 if not DEBUG:
